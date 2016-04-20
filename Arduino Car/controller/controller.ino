@@ -7,14 +7,13 @@
 #include <PS2X_lib.h> 
 
 /***** DEFINES *****/
+#define PWM 6
 
 /***** GLOBALS *****/
 PS2X ps2x; // PS2 Controller class
 int error = 0;
 byte vibrate = 0;
-byte rx_buff
-
-byte PWM = 6;
+byte rx_buff[4] = {0, 0, 0, 0};
 
 /***** SETUP *****/
 void setup() {
@@ -40,8 +39,8 @@ void loop() {
 
   ps2x.read_gamepad(false, vibrate);
   analogWrite(PWM, ps2x.Analog(PSAB_BLUE));
+  Serial.println(ps2x.Analog(PSS_LX));
 }
 
 
 /***** FUNCTIONS *****/
-

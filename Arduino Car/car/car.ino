@@ -7,8 +7,8 @@
 
 /***** DEFINES *****/
 #define MAX_PWM 255
-#define PWM_OUT 6
-#define 
+#define MOTOR_OUT 5
+#define TURN_OUT 6
 #define IN1 2
 #define IN2 3
 #define IN3 4
@@ -24,15 +24,15 @@ byte num_bytes = 0;
 
 /***** SETUP *****/
 void setup() {
-  Serial.begin(9600); // For XBee data
+  Serial.begin(57600); // For XBee data
+  //Serial.begin(9600);
 }
 
 
 /***** LOOP *****/
-
 void loop() {
 
-  // Read XBee data
+  // Read data when it is sent
   if (Serial.available() >= 4) {
 
     // Protocol:
@@ -50,13 +50,20 @@ void loop() {
 
       /***** SCHEME ONE *****/
 
-      analogWrite(PWM, rx_buff[1]); // Forward data is PWM
+      analogWrite(MOTOR_OUT, rx_buff[1]); // Forward data is PWM
 
       // Interpret left/right control
-      if (rx_buff[2] > 128) {
-        analogWrite(TURN
+      byte turn_val = rx_buff[2];
+      if (turn_val > 128) {
+        analogWrite(TURN_OUT, (turn_val-128)*2); // Turn right
       }
-      
+      else if (turn_val < 128) {
+        analogWrite(TURN_OUT, (turn_val-128)); // Turn left
+      }
+      else {
+        // do nothing
+        analogWrite(TURN_OUT, /*zero?*/)
+      }
       
       
     }
